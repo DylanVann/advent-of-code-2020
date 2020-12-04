@@ -3,35 +3,24 @@ import strscans
 import tables
 import sequtils
 
-let requiredFields = [
-    "byr",
-    "iyr",
-    "eyr",
-    "hgt",
-    "hcl",
-    "ecl",
-    "pid",
-]
+let requiredFields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
 
 proc checkNumber*(value: string, min: int, max: int): bool =
     var v: int
     return scanf(value, "$i", v) and v >= min and v <= max
 
-proc isValidField*(attr: string, value: string): bool =
+proc isValidField*(attr: string, v: string): bool =
     case attr:
-    of "byr": return value.checkNumber(1920, 2002)
-    of "iyr": return value.checkNumber(2010, 2020)
-    of "eyr": return value.checkNumber(2020, 2030)
-    of "hgt":
-        return (value.endsWith("cm") and value[0..^3].checkNumber(150, 193)) or
-            (value.endsWith("in") and value[0..^3].checkNumber(59, 76))
-    of "hcl":
-        return value.startsWith("#") and value.len == 7 and
-            value[1..^1].allIt(HexDigits.contains(it))
-    of "ecl":
-        return ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"].contains(value)
-    of "pid":
-        return value.len == 9 and value.allIt(Digits.contains(it))
+    of "byr": return v.checkNumber(1920, 2002)
+    of "iyr": return v.checkNumber(2010, 2020)
+    of "eyr": return v.checkNumber(2020, 2030)
+    of "hgt": return (v.endsWith("cm") and v[0..^3].checkNumber(150, 193)) or
+        (v.endsWith("in") and v[0..^3].checkNumber(59, 76))
+    of "hcl": return v.startsWith("#") and v.len == 7 and
+        v[1..^1].allIt(HexDigits.contains(it))
+    of "ecl": return ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
+        .contains(v)
+    of "pid": return v.len == 9 and v.allIt(Digits.contains(it))
     return true
 
 
