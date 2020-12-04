@@ -1,15 +1,12 @@
 import strutils
 
 proc solveA*(map: string, right: int, down: int): int =
-    var lines = splitLines(map)
+    let lines = splitLines(map)
     let width = lines[0].len
-    var trees = 0
-    var x = 0
-    var y = 0
+    var trees, x, y: int
     while y <= lines.len - 1:
         let hasTree = lines[y][x mod width] == '#'
-        if (hasTree):
-            inc trees
+        if hasTree: inc trees
         x += right
         y += down
     return trees
