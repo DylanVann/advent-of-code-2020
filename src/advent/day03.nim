@@ -1,6 +1,6 @@
 import strutils
 
-proc solveA*(map: string, right: int, down: int): int =
+proc solveA*(map: string, right: int = 3, down: int = 1): int =
     let lines = splitLines(map)
     let width = lines[0].len
     var trees, x, y: int
@@ -11,7 +11,13 @@ proc solveA*(map: string, right: int, down: int): int =
         y += down
     return trees
 
-proc solveB*(map: string, slopes: openArray[(int, int)]): int =
+proc solveB*(map: string, slopes: openArray[(int, int)] = [
+            (1, 1),
+            (3, 1),
+            (5, 1),
+            (7, 1),
+            (1, 2),
+        ]): int =
     result = 1
     for slope in slopes:
         let (right, down) = slope
