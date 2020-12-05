@@ -13,3 +13,7 @@ discard day03.solveB(readFile("tests/tday03.txt"))
 import day04
 discard day04.solveA(readFile("tests/tday04.txt"))
 discard day04.solveB(readFile("tests/tday04.txt"))
+
+import day05
+discard day05.solveA(readFile("tests/tday05.txt"))
+discard day05.solveB(readFile("tests/tday05.txt"))
