@@ -1,6 +1,7 @@
 import strutils
 import sets
 import tables
+import sequtils
 import re
 
 type Bag = object
@@ -13,30 +14,24 @@ type BagRef = ref Bag
 proc newBagRef(name: string): BagRef =
     BagRef(name: name, parents: newTable[string, BagRef](), children: newTable[string, (BagRef, int)]())
 
-proc parseBags(input: string): Table[string, ref Bag] =
-    var bags = initTable[string, ref Bag]()
-    let lines = input.splitLines
-    for line in lines:
+proc parseBags(input: string): Table[string, BagRef] =
+    var bags = initTable[string, BagRef]()
+    for line in input.splitLines:
         let matches = findAll(line, re"([[:digit:]]? ?\w* \w*) bag")
         let outerBagKey = matches[0][0..^5]
         var outerBag = bags.mgetOrPut(outerBagKey, newBagRef(outerBagKey))
-        for bag in matches:
-            if bag == " no other bag":
-                discard
-            elif Digits.contains(bag[0]):
-                let count: int = parseInt($bag[0]) 
-                let bagKey: string = bag[2..^5]
-                var bag = bags.mgetOrPut(bagKey, newBagRef(bagKey))
-                bag.parents[outerBagKey] = outerBag
-                outerBag.children[bagKey] = (bag, count)
-            else:
-                discard
+        for bag in matches.filterIt(Digits.contains(it[0])):
+            let count: int = parseInt($bag[0]) 
+            let bagKey: string = bag[2..^5]
+            var bag = bags.mgetOrPut(bagKey, newBagRef(bagKey))
+            bag.parents[outerBagKey] = outerBag
+            outerBag.children[bagKey] = (bag, count)
     return bags
 
 proc solveA*(input: string): int = 
     let bags = parseBags(input)
     var uniqueParents = initHashSet[string]()
-    proc getParents(parents: TableRef[string, ref Bag]): bool {.discardable.} =
+    proc getParents(parents: TableRef[string, BagRef]): bool {.discardable.} =
         for p in parents.values:
             if not uniqueParents.contains(p.name):
                 uniqueParents.incl(p.name)
