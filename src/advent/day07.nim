@@ -47,10 +47,7 @@ proc solveA*(input: string): int =
 proc solveB*(input: string): int =
     let bags = parseBags(input)
     proc getChildCount(children: TableRef[string, (BagRef, int)]): int =
-        var childCount = 0
         for c in children.values:
             let (bag, count) = c
-            childCount += count
-            childCount += count * getChildCount(bag.children)
-        return childCount
+            result += count + count * getChildCount(bag.children)
     return getChildCount(bags.getOrDefault("shiny gold").children)
