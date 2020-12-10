@@ -27,4 +27,4 @@ suite "day06":
     test "example b":
         check(solveB(example) == 6)
     test "solution b":
-        check(solveB(input) == 615)
+        check(solveB(input) == 3052)
